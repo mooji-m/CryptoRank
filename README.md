@@ -1,7 +1,5 @@
 # CryptoRank 📈
 
-A clean, light-weight, and native Android application built 3 years ago to track real-time cryptocurrency data, live market trends, global crypto news, and price charts. It demonstrates proper architecture setup, clean API integration, and asynchronous data handling in Kotlin.
-
 ---
 <div align="center">
 <p align="center">
@@ -12,7 +10,7 @@ A clean, light-weight, and native Android application built 3 years ago to track
 </p>
 </div>
 
-
+A clean, light-weight, and native Android application built 3 years ago to track real-time cryptocurrency data, live market trends, global crypto news, and price charts. It demonstrates proper architecture setup, clean API integration, and asynchronous data handling in Kotlin.
 
 ## ✨ Features
 
