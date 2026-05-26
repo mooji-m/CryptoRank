@@ -1,0 +1,276 @@
+package com.mooji.cod.cryptorank.features.coinActivity
+
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.mooji.cod.cryptorank.R
+import com.mooji.cod.cryptorank.apiManager.*
+import com.mooji.cod.cryptorank.apiManager.model.ChartData
+import com.mooji.cod.cryptorank.apiManager.model.CoinAboutItem
+import com.mooji.cod.cryptorank.apiManager.model.CoinsData
+import com.mooji.cod.cryptorank.databinding.ActivityCoinBinding
+
+class CoinActivity : AppCompatActivity() {
+    lateinit var binding: ActivityCoinBinding
+    lateinit var dataThisCoin: CoinsData.Data
+    lateinit var dataThisCoinAbout: CoinAboutItem
+    val apiManager = ApiManager()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityCoinBinding.inflate(layoutInflater)
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        //dataThisCoin = intent.getParcelableExtra<CoinsData.Data>("dataToSend")!!
+
+
+        val fromIntent = intent.getBundleExtra("dataToSend")!!
+
+        dataThisCoin = fromIntent.getParcelable<CoinsData.Data>("bundle1")!!
+        if (fromIntent.getParcelable<CoinAboutItem>("bundle2") != null) {
+
+            dataThisCoinAbout = fromIntent.getParcelable<CoinAboutItem>("bundle2")!!
+        } else {
+            dataThisCoinAbout = CoinAboutItem()
+        }
+
+
+
+
+        binding.layoutToolbar.toolbar.title = dataThisCoin.coinInfo.fullName
+
+        initUi()
+
+
+    }
+
+    private fun initUi() {
+
+        initChartUi()
+
+        initStatisticsUi()
+
+        initAboutUi()
+    }
+
+    private fun initChartUi() {
+
+        var period: String = HOUR
+        requestAndShowData(period)
+        binding.layoutChart.radioMain.setOnCheckedChangeListener { compoundButton, checkedId ->
+            when (checkedId) {
+
+                R.id.radio_12h -> {
+                    period = HOUR
+                }
+                R.id.radio_1d -> {
+                    period = HOURS24
+                }
+                R.id.radio_1w -> {
+                    period = WEEK
+                }
+                R.id.radio_1m -> {
+                    period = MONTH
+                }
+                R.id.radio_3m -> {
+                    period = MONTH3
+                }
+                R.id.radio_1y -> {
+                    period = YEAR
+                }
+                R.id.radio_all -> {
+                    period = ALL
+                }
+
+            }
+            requestAndShowData(period)
+
+
+        }
+
+        binding.layoutChart.txtChartPrice.text = dataThisCoin.dISPLAY.uSD.pRICE
+        binding.layoutChart.txtChartChange1.text = "" + dataThisCoin.dISPLAY.uSD.cHANGE24HOUR
+
+        if (dataThisCoin.rAW.uSD.cHANGEPCT24HOUR.takeUnless { it == 0.0 } == null) {
+            binding.layoutChart.txtChartChange2.text = "0%"
+        } else {
+            binding.layoutChart.txtChartChange2.text =
+                dataThisCoin.rAW.uSD.cHANGEPCT24HOUR.toString().substring(0, 5) + "%"
+        }
+        val change = dataThisCoin.rAW.uSD.cHANGEPCT24HOUR
+        if (change > 0) {
+            binding.layoutChart.txtChartChange2.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorGain
+                )
+            )
+            binding.layoutChart.txtChartUpdown.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorGain
+                )
+            )
+            binding.layoutChart.txtChartUpdown.text = "▲"
+            binding.layoutChart.sparkMain.lineColor =
+                ContextCompat.getColor(this, R.color.colorGain)
+
+        } else if (change < 0) {
+            binding.layoutChart.txtChartChange2.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorLoss
+                )
+            )
+            binding.layoutChart.txtChartUpdown.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorLoss
+                )
+            )
+            binding.layoutChart.txtChartUpdown.text = "▼"
+            binding.layoutChart.sparkMain.lineColor =
+                ContextCompat.getColor(this, R.color.colorLoss)
+        }
+
+
+        binding.layoutChart.sparkMain.setScrubListener {
+
+            if (it == null) {
+                binding.layoutChart.txtChartPrice.text = dataThisCoin.dISPLAY.uSD.pRICE
+            } else {
+                binding.layoutChart.txtChartPrice.text =
+                    "$ " + (it as ChartData.Data).close.toString()
+
+            }
+        }
+
+
+    }
+
+    private fun requestAndShowData(period: String) {
+
+        apiManager.getChartData(
+            dataThisCoin.coinInfo.name,
+            period,
+            object : ApiManager.ApiCallback<Pair<List<ChartData.Data>, ChartData.Data?>> {
+                override fun onSuccess(data: Pair<List<ChartData.Data>, ChartData.Data?>) {
+
+                    val chartAdapter = ChartAdapter(data.first, data.second?.open.toString())
+
+                    binding.layoutChart.sparkMain.adapter = chartAdapter
+
+
+                }
+
+                override fun onError(errorMessage: String) {
+                    Toast.makeText(
+                        this@CoinActivity,
+                        "error => " + errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            })
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initStatisticsUi() {
+
+
+        binding.layoutStatistics.tvOpenAmount.text =
+            "$" + dataThisCoin.rAW.uSD.oPEN24HOUR.toString()
+        binding.layoutStatistics.tvTodaysHighAmount.text = dataThisCoin.dISPLAY.uSD.hIGH24HOUR
+        binding.layoutStatistics.tvTodayLowAmount.text = dataThisCoin.dISPLAY.uSD.lOW24HOUR
+        binding.layoutStatistics.tvChangeTodayAmount.text = dataThisCoin.dISPLAY.uSD.cHANGE24HOUR
+        binding.layoutStatistics.tvAlgorithm.text = dataThisCoin.coinInfo.algorithm
+        binding.layoutStatistics.tvTotalVolume.text = dataThisCoin.dISPLAY.uSD.tOTALVOLUME24H
+        binding.layoutStatistics.tvAvgMarketCapAmount.text = dataThisCoin.dISPLAY.uSD.mKTCAP
+        binding.layoutStatistics.tvSupplyNumber.text = dataThisCoin.dISPLAY.uSD.sUPPLY
+
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initAboutUi() {
+        if (dataThisCoinAbout.coinWebsite == "" ||dataThisCoinAbout.coinWebsite == null) {
+            binding.layoutAbout.txtWebsite.text = "N/A"
+        } else {
+            binding.layoutAbout.txtWebsite.text = dataThisCoinAbout.coinWebsite
+        }
+
+        if (dataThisCoinAbout.coinGithub == "" || dataThisCoinAbout.coinGithub == null) {
+            binding.layoutAbout.txtGithub.text = "N/A"
+        } else {
+            binding.layoutAbout.txtGithub.text = dataThisCoinAbout.coinGithub
+        }
+        if (dataThisCoinAbout.coinReddit == ""||dataThisCoinAbout.coinReddit == null) {
+            binding.layoutAbout.txtReddit.text = "N/A"
+        } else {
+            binding.layoutAbout.txtReddit.text = dataThisCoinAbout.coinReddit
+        }
+        if (dataThisCoinAbout.coinTwitter == ""||dataThisCoinAbout.coinTwitter == null) {
+            binding.layoutAbout.txtTwitter.text = "N/A"
+        } else {
+            binding.layoutAbout.txtTwitter.text = "@" + dataThisCoinAbout.coinTwitter
+        }
+        binding.layoutAbout.txtAboutCoin.text = dataThisCoinAbout.coinDesc
+
+        binding.layoutAbout.txtWebsite.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+
+                if (binding.layoutAbout.txtWebsite.text == "N/A") {
+
+                } else {
+                    openSocialDataCoin(dataThisCoinAbout.coinWebsite!!)
+                }
+            }
+
+        })
+
+        binding.layoutAbout.txtTwitter.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+
+                if (binding.layoutAbout.txtTwitter.text == "@N/A" || binding.layoutAbout.txtTwitter.text == "N/A") {
+
+                } else {
+                    openSocialDataCoin(BASE_URL_TWITTER + dataThisCoinAbout.coinTwitter)
+                }
+            }
+
+        })
+
+        binding.layoutAbout.txtReddit.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                if (binding.layoutAbout.txtReddit.text == "N/A") {
+
+                } else {
+                    openSocialDataCoin(dataThisCoinAbout.coinReddit!!)
+                }
+            }
+
+        })
+
+        binding.layoutAbout.txtGithub.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(p0: View?) {
+                if (binding.layoutAbout.txtGithub.text == "N/A") {
+
+                } else {
+                    openSocialDataCoin(dataThisCoinAbout.coinGithub!!)
+                }
+            }
+
+        })
+    }
+
+    private fun openSocialDataCoin(url: String) {
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+}
