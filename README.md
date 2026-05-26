@@ -4,6 +4,13 @@ A clean, light-weight, and native Android application built 3 years ago to track
 
 ---
 
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/2ec25606-f09a-40c7-af63-97e04c81c40e
+" width="300" controls>
+    Your browser does not support the video tag.
+  </video>
+</p>
+
 ## ✨ Features
 
 - **Live Cryptocurrency Tracker:** Displays a real-time list of top cryptocurrencies with prices (formatted dynamically), 24-hour price changes (with dynamic green/red indicators), and total market capitalization.
