@@ -2,8 +2,6 @@
 
 A clean, light-weight, and native Android application built 3 years ago to track real-time cryptocurrency data, live market trends, global crypto news, and price charts. This repository serves as a practical blueprint and an ideal playground for developers wanting to learn, practice, or test REST API integration and asynchronous data handling in Kotlin.
 
----
-
 <div align="center">
 <p align="center">
   <video src="https://github.com/user-attachments/assets/0990398f-956c-43e5-ba5f-22fe6d2b8ded
@@ -13,6 +11,7 @@ A clean, light-weight, and native Android application built 3 years ago to track
 </p>
 </div>
 
+---
 ## ✨ Features
 
 - **Live Cryptocurrency Tracker:** Displays a real-time list of top cryptocurrencies with prices (formatted dynamically), 24-hour price changes (with dynamic green/red indicators), and total market capitalization.
