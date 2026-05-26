@@ -3,13 +3,16 @@
 A clean, light-weight, and native Android application built 3 years ago to track real-time cryptocurrency data, live market trends, global crypto news, and price charts. It demonstrates proper architecture setup, clean API integration, and asynchronous data handling in Kotlin.
 
 ---
-
+<div align="center">
 <p align="center">
-  <video src="https://github.com/user-attachments/assets/2ec25606-f09a-40c7-af63-97e04c81c40e
+  <video src="https://github.com/user-attachments/assets/0990398f-956c-43e5-ba5f-22fe6d2b8ded
 " width="300" controls>
     Your browser does not support the video tag.
   </video>
 </p>
+</div>
+
+
 
 ## ✨ Features
 
