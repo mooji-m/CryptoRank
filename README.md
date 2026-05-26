@@ -40,8 +40,8 @@ The core business logic is structured into distinct packages separating network 
    ```bash
    git clone [https://github.com/mooji-m/CryptoRank.git](https://github.com/mooji-m/CryptoRank.git)
 
-   Open the project inside Android Studio.
+2.  Open the project inside Android Studio.
 
-API Key Setup: Go to CryptoCompare, generate a free API key, and paste it into the API_KEY constant inside ApiService.kt.
+3. API Key Setup: Go to CryptoCompare, generate a free API key, and paste it into the API_KEY constant inside ApiService.kt.
 
-Sync Gradle files, build, and run the application on your device/emulator.
+4. Sync Gradle files, build, and run the application on your device/emulator.
