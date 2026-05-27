@@ -53,3 +53,6 @@ The core business logic is structured into distinct packages separating network 
 3. API Key Setup: Go to CryptoCompare, generate a free API key, and paste it into the API_KEY constant inside ApiService.kt.
 
 4. Sync Gradle files, build, and run the application on your device/emulator.
+
+📝 Developer Note
+This project was developed 3 years ago as part of my evolutionary journey into native Android and API ecosystem integration. While some libraries or target specifications reflect that specific era, it showcases a rock-solid foundation in asynchronous network architecture, UI state rendering, and decoupled logic. Left open-source to archive my software development timeline.
