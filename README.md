@@ -1,6 +1,6 @@
 # CryptoRank 📈
 
-A clean, light-weight, and native Android application built 3 years ago to track real-time cryptocurrency data, live market trends, global crypto news, and price charts. This repository serves as a practical blueprint and an ideal playground for developers wanting to learn, practice, or test REST API integration and asynchronous data handling in Kotlin.
+A clean, light-weight, and native Android application to track real-time cryptocurrency data, live market trends, global crypto news, and price charts. This repository serves as a practical blueprint and an ideal playground for developers wanting to learn, practice, or test REST API integration and asynchronous data handling in Kotlin.
 
 <div align="center">
 <p align="center">
